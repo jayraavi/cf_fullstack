@@ -1,6 +1,6 @@
 name = "cf_fullstack"
 type = "javascript"
-account_id = ""
+account_id = "0dff9afa25a2bf86c1f7303b91dcf31c"
 workers_dev = true
 route = ""
 zone_id = ""

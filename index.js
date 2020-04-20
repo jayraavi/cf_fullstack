@@ -1,7 +1,13 @@
+class TitleHandler {
+  element(element) {
+    console.log(`Incoming element: ${element.tagName}`);
+    element.replace("Jay's App");
+  }
+}
 const VARIANTS_URL = new URL(
   "https://cfw-takehome.developers.workers.dev/api/variants"
 );
-const rewriter = new HTMLRewriter();
+const rewriter = new HTMLRewriter().on("title", new TitleHandler());
 
 async function fetchUrls() {
   let response = await fetch(VARIANTS_URL).then((resp) => resp.json());
