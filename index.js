@@ -4,10 +4,40 @@ class TitleHandler {
     element.replace("Jay's App");
   }
 }
+
+class HeaderHandler {
+  element(element) {
+    console.log(`Incoming element: ${element.tagName}`);
+    // console.log(element.attributes);
+    element.prepend("Welcome to the marvelous ");
+    element.append(":)");
+  }
+}
+
+class DescriptionHandler {
+  element(element) {
+    console.log(`Incoming element: ${element.tagName}`);
+    element.replace("Wonder what variant you'll get next time...");
+  }
+}
+
+class UrlHandler {
+  element(element) {
+    console.log(`Incoming element: ${element.tagName}`);
+    element.setInnerContent(
+      'Check out my GitHub! <a href="https://github.com/jayraavi”></a>.',
+      { html: true }
+    );
+  }
+}
 const VARIANTS_URL = new URL(
   "https://cfw-takehome.developers.workers.dev/api/variants"
 );
-const rewriter = new HTMLRewriter().on("title", new TitleHandler());
+const rewriter = new HTMLRewriter()
+  .on("title", new TitleHandler())
+  .on("h1#title", new HeaderHandler())
+  .on("p#description", new DescriptionHandler())
+  .on("a#url", new UrlHandler());
 
 async function fetchUrls() {
   let response = await fetch(VARIANTS_URL).then((resp) => resp.json());
