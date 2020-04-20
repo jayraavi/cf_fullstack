@@ -24,10 +24,8 @@ class DescriptionHandler {
 class UrlHandler {
   element(element) {
     console.log(`Incoming element: ${element.tagName}`);
-    element.setInnerContent(
-      'Check out my GitHub! <a href="https://github.com/jayraavi”></a>.',
-      { html: true }
-    );
+    element.setAttribute("href", "https://github.com/jayraavi");
+    element.setInnerContent("Check out my GitHub!");
   }
 }
 const VARIANTS_URL = new URL(
