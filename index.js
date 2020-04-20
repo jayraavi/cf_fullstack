@@ -63,7 +63,6 @@ addEventListener("fetch", (event) => {
 async function handleRequest(request) {
   let variants = await fetchUrls();
   let variant = pickRandomVariant(variants);
-  console.log(variant.href);
   let body = await fetchVariantContent(variant);
   return body;
 }
