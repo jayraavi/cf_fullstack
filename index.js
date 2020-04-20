@@ -1,14 +1,17 @@
+const VARIANTS_URL = new URL(
+  "https://cfw-takehome.developers.workers.dev/api/variants"
+);
 class TitleHandler {
   element(element) {
-    console.log(`Incoming element: ${element.tagName}`);
-    element.replace("Jay's App");
+    element.replace(
+      "<div align = 'center' <h1> Jay's Internship Application</h1> </div>",
+      { html: true }
+    );
   }
 }
 
 class HeaderHandler {
   element(element) {
-    console.log(`Incoming element: ${element.tagName}`);
-    // console.log(element.attributes);
     element.prepend("Welcome to the marvelous ");
     element.append(":)");
   }
@@ -16,21 +19,17 @@ class HeaderHandler {
 
 class DescriptionHandler {
   element(element) {
-    console.log(`Incoming element: ${element.tagName}`);
     element.replace("Wonder what variant you'll get next time...");
   }
 }
 
 class UrlHandler {
   element(element) {
-    console.log(`Incoming element: ${element.tagName}`);
     element.setAttribute("href", "https://github.com/jayraavi");
     element.setInnerContent("Check out my GitHub!");
   }
 }
-const VARIANTS_URL = new URL(
-  "https://cfw-takehome.developers.workers.dev/api/variants"
-);
+
 const rewriter = new HTMLRewriter()
   .on("title", new TitleHandler())
   .on("h1#title", new HeaderHandler())
@@ -38,32 +37,33 @@ const rewriter = new HTMLRewriter()
   .on("a#url", new UrlHandler());
 
 async function fetchUrls() {
-  let response = await fetch(VARIANTS_URL).then((resp) => resp.json());
-  console.log(response);
+  let response = await fetch(VARIANTS_URL)
+    .then((resp) => resp.json()) //convert response to JSON to index array
+    .catch((err) => console.log(err.message));
   return response.variants;
 }
 
 function pickRandomVariant(variants) {
-  const RANDOM_INDEX = Math.floor(Math.random() * 2);
+  const RANDOM_INDEX = Math.floor(Math.random() * variants.length); // generate random index in array
   return new URL(variants[RANDOM_INDEX]);
 }
 
 async function fetchVariantContent(variant) {
-  let response = await fetch(variant);
-  return rewriter.transform(response);
+  let response = await fetch(variant).catch((err) => console.log(err.message));
+  return rewriter.transform(response); // apply rewrites on specified tags
 }
 
 addEventListener("fetch", (event) => {
   event.respondWith(handleRequest(event.request));
 });
 /**
- * Respond with hello worker text
+ * Get array of variants, pick random variant, fetch from random variant
  * @param {Request} request
  */
 async function handleRequest(request) {
   let variants = await fetchUrls();
-  variant = pickRandomVariant(variants);
-  console.log(variant);
+  let variant = pickRandomVariant(variants);
+  console.log(variant.href);
   let body = await fetchVariantContent(variant);
   return body;
 }
